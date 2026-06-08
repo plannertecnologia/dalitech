@@ -406,13 +406,14 @@ function SuperDash() {
 // ── SUPER ADMIN: EMPRESAS ──────────────────────────────────────────────────
 
 // ── Cria usuário via Admin API (oficial) + perfil ──────────────────────────
-async function createUserWithInvite({email, name, companyId, role, modules}) {
-  // 1. Convida via Admin API — manda email automaticamente
-  const {data:authData,error:authErr} = await supabaseAdmin.auth.admin.inviteUserByEmail(
-    email.trim(),
-    { redirectTo:'https://dalitech.vercel.app',
-      data:{ name: name.trim()||email.split('@')[0] } }
-  )
+async function createUserWithInvite({email, name, companyId, role, modules, password}) {
+  // Cria usuário direto com senha (sem envio de e-mail)
+  const {data:authData,error:authErr} = await supabaseAdmin.auth.admin.createUser({
+    email: email.trim(),
+    password: password, // senha definida pelo admin no formulário
+    email_confirm: true, // já confirma sem precisar de e-mail
+    user_metadata: { name: name.trim()||email.split('@')[0] }
+  })
   if(authErr) {
     const msg = authErr.message?.includes('already')
       ? 'E-mail já cadastrado.' : 'Erro: '+authErr.message
@@ -421,7 +422,7 @@ async function createUserWithInvite({email, name, companyId, role, modules}) {
   const userId = authData?.user?.id
   if(!userId) throw new Error('ID do usuário não retornado')
 
-  // 2. Cria perfil
+  // Cria perfil
   const {error:profErr} = await supabase.rpc('create_user_profile',{
     user_id: userId,
     user_email: email.trim(),
@@ -433,7 +434,6 @@ async function createUserWithInvite({email, name, companyId, role, modules}) {
   if(profErr) throw new Error('Erro no perfil: '+profErr.message)
   return userId
 }
-
 // ── MODAL EMPRESA (Super Admin) ────────────────────────────────────────────
 function ModalSuperEmpresa({company, onClose, onSaved}) {
   const isNew = !company
