@@ -3494,7 +3494,6 @@ function ModalPerfil({user,onClose}) {
     const load = async()=>{
       const {data:p} = await supabase.from('profiles').select('name').eq('id',user.id).single()
       if(p) setName(p.name||'')
-    }
     load()
   },[user.id])
   const save = async()=>{
