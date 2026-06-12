@@ -3850,7 +3850,7 @@ function PageSettings({user,onLogout,companyId,isSuperAdmin}) {
 }
 
 // ── SIDEBAR ────────────────────────────────────────────────────────────────
-function Sidebar({page,setPage,nav,companyName,isSuperAdmin}) {
+
   const [expanded,setExpanded] = useState(false)
   const timerRef = useRef(null)
 
@@ -3948,7 +3948,6 @@ function Sidebar({page,setPage,nav,companyName,isSuperAdmin}) {
 
 
 // ── BOTTOM NAV MOBILE ──────────────────────────────────────────────────────
-function BottomNav({page,setPage,onMenu,isSuperAdmin}) {
   const quick = isSuperAdmin
     ? [{id:'super_dash',label:'Painel',icon:'🌐'},{id:'super_companies',label:'Empresas',icon:'🏢'},{id:'super_licenses',label:'Licenças',icon:'🔑'},{id:'super_users',label:'Usuários',icon:'👥'}]
     : [{id:'dash',label:'Home',icon:'📊'},{id:'pdv',label:'PDV',icon:'🛒'},{id:'products',label:'Produtos',icon:'📦'},{id:'cashflow',label:'Caixa',icon:'💰'}]
@@ -3968,8 +3967,6 @@ function BottomNav({page,setPage,onMenu,isSuperAdmin}) {
     </div>
   )
 }
-
-function MobileDrawer({page,setPage,onClose,nav,companyName,isSuperAdmin}) {
   return (
     <div style={{position:'fixed',inset:0,zIndex:300}}>
       <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(13,43,94,0.5)'}}/>
