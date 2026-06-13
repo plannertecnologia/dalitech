@@ -3967,6 +3967,7 @@ function Sidebar({page, setPage, nav, companyName, isSuperAdmin, canAccess}) {
     </div>
   )
 }
+function MobileDrawer({page, setPage, onClose, nav, companyName, isSuperAdmin, canAccess}) {
   return (
     <div style={{position:'fixed',inset:0,zIndex:300}}>
       <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(13,43,94,0.5)'}}/>
@@ -3996,58 +3997,6 @@ function Sidebar({page, setPage, nav, companyName, isSuperAdmin, canAccess}) {
 // ══════════════════════════════════════
 // NAV COM CONTROLE DE PLANO
 // ══════════════════════════════════════
-function NavItem({ item, active, onClick, locked }) {
-  return (
-    <button onClick={() => !locked && onClick(item.id)} style={{
-      width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-      padding: '9px 10px', borderRadius: 9, border: 'none', cursor: locked ? 'not-allowed' : 'pointer',
-      marginBottom: 1, textAlign: 'left',
-      background: active ? 'rgba(255,255,255,0.13)' : 'transparent',
-      borderLeft: `3px solid ${active ? C.green : 'transparent'}`,
-      opacity: locked ? 0.4 : 1, transition: 'all .15s',
-    }}>
-      <span style={{ fontSize: 15 }}>{item.icon}</span>
-      <span style={{ fontSize: 12, fontWeight: active ? 700 : 400, color: active ? C.white : 'rgba(255,255,255,0.6)' }}>
-        {item.label}
-      </span>
-      {locked && <span style={{ marginLeft: 'auto', fontSize: 10 }}>🔒</span>}
-    </button>
-  )
-}
-
-function Sidebar({ page, setPage, nav, companyName, isSuperAdmin, canAccess }) {
-  return (
-    <div style={{ width: 224, minHeight: '100vh', background: C.navy, display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-      <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 38, height: 38, background: C.white, borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <DaliLogo size={30} />
-          </div>
-          <div>
-            <p style={{ fontSize: 15, fontWeight: 900, color: C.white, margin: 0 }}>DALI<span style={{ color: C.green }}>Tech</span></p>
-            <p style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', margin: 0, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              {isSuperAdmin ? 'Super Admin' : 'ERP Sistema'}
-            </p>
-          </div>
-        </div>
-        {companyName && (
-          <div style={{ marginTop: 12, background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '7px 10px' }}>
-            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Empresa</p>
-            <p style={{ fontSize: 12, fontWeight: 700, color: C.white, margin: '2px 0 0' }}>{companyName}</p>
-          </div>
-        )}
-        {isSuperAdmin && <div style={{ marginTop: 8 }}><Badge label="⭐ Super Admin" color="rgba(255,255,255,0.15)" text={C.green} /></div>}
-      </div>
-      <nav style={{ flex: 1, padding: '10px 8px', overflowY: 'auto' }}>
-        {nav.map(item => (
-          <NavItem key={item.id} item={item} active={page === item.id}
-            onClick={setPage} locked={!isSuperAdmin && canAccess && !canAccess(item.id)} />
-        ))}
-      </nav>
-    </div>
-  )
-}
-
 function BottomNav({ page, setPage, onMenu, isSuperAdmin, canAccess }) {
   const quick = isSuperAdmin
     ? [{ id: 'super_dash', label: 'Painel', icon: '🌐' }, { id: 'super_companies', label: 'Empresas', icon: '🏢' }, { id: 'super_licenses', label: 'Licenças', icon: '🔑' }, { id: 'super_users', label: 'Usuários', icon: '👥' }]
@@ -4079,45 +4028,25 @@ function BottomNav({ page, setPage, onMenu, isSuperAdmin, canAccess }) {
   )
 }
 
-function MobileDrawer({ page, setPage, onClose, nav, companyName, isSuperAdmin, canAccess }) {
+function NavItem({ item, active, onClick, locked }) {
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 300 }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(13,43,94,0.5)' }} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: C.white, borderRadius: '20px 20px 0 0', maxHeight: '80vh', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 8px' }}>
-          <div style={{ width: 40, height: 4, background: C.border, borderRadius: 2 }} />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 18px 14px', borderBottom: `1px solid ${C.border}` }}>
-          <div style={{ width: 34, height: 34, background: C.navy, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <DaliLogo size={26} />
-          </div>
-          <div>
-            <p style={{ fontSize: 14, fontWeight: 900, color: C.navy, margin: 0 }}>DALI<span style={{ color: C.green }}>Tech</span></p>
-            {isSuperAdmin ? <Badge label="⭐ Super Admin" color={C.infoPale} text={C.info} /> : <p style={{ fontSize: 10, color: C.muted, margin: 0 }}>{companyName}</p>}
-          </div>
-        </div>
-        <div style={{ padding: '8px 12px 36px' }}>
-          {nav.map(item => {
-            const locked = !isSuperAdmin && canAccess && !canAccess(item.id)
-            return (
-              <button key={item.id} onClick={() => { if (!locked) { setPage(item.id); onClose() } }} style={{
-                width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '13px 12px',
-                border: 'none', background: page === item.id ? C.surfaceAlt : 'transparent',
-                borderRadius: 12, cursor: locked ? 'not-allowed' : 'pointer', marginBottom: 2, textAlign: 'left',
-                opacity: locked ? 0.4 : 1,
-              }}>
-                <span style={{ fontSize: 19 }}>{item.icon}</span>
-                <span style={{ fontSize: 14, fontWeight: page === item.id ? 700 : 500, color: page === item.id ? C.navy : C.text }}>
-                  {item.label}
-                </span>
-                {locked && <span style={{ marginLeft: 'auto', fontSize: 12 }}>🔒</span>}
-                {!locked && page === item.id && <div style={{ marginLeft: 'auto', width: 7, height: 7, background: C.green, borderRadius: 999 }} />}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-    </div>
+    <button onClick={() => !locked && onClick(item.id)} style={{
+      width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+      padding: '9px 10px', borderRadius: 9, border: 'none', cursor: locked ? 'not-allowed' : 'pointer',
+      marginBottom: 1, textAlign: 'left',
+      background: active ? 'rgba(255,255,255,0.13)' : 'transparent',
+      borderLeft: `3px solid ${active ? C.green : 'transparent'}`,
+      opacity: locked ? 0.4 : 1, transition: 'all .15s',
+    }}>
+      <span style={{ fontSize: 15 }}>{item.icon}</span>
+      <span style={{ fontSize: 12, fontWeight: active ? 700 : 400, color: active ? C.white : 'rgba(255,255,255,0.6)' }}>
+        {item.label}
+      </span>
+      {locked && <span style={{ marginLeft: 'auto', fontSize: 10 }}>🔒</span>}
+    </button>
+  )
+}
+
   )
 }
 
