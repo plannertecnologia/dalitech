@@ -3850,7 +3850,7 @@ function PageSettings({user,onLogout,companyId,isSuperAdmin}) {
 }
 
 // ── SIDEBAR ────────────────────────────────────────────────────────────────
-
+function Sidebar({page, setPage, nav, companyName, isSuperAdmin, canAccess}) {
   const [expanded,setExpanded] = useState(false)
   const timerRef = useRef(null)
 
