@@ -3491,11 +3491,12 @@ function ModalPerfil({user,onClose}) {
   const [saving,setSaving] = useState(false)
   const toast = useToast()
   useEffect(()=>{
-    const load = async()=>{
+const load = async()=>{
       const {data:p} = await supabase.from('profiles').select('name').eq('id',user.id).single()
       if(p) setName(p.name||'')
+    }
     load()
-},[user])
+  },[user])
     const save = async()=>{
     setSaving(true)
     const {error:pe} = await supabase.from('profiles').update({name}).eq('id',user.id)
