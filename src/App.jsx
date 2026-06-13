@@ -3495,8 +3495,8 @@ function ModalPerfil({user,onClose}) {
       const {data:p} = await supabase.from('profiles').select('name').eq('id',user.id).single()
       if(p) setName(p.name||'')
     load()
-  },[user.id])
-  const save = async()=>{
+},[user?.id])
+    const save = async()=>{
     setSaving(true)
     const {error:pe} = await supabase.from('profiles').update({name}).eq('id',user.id)
     if(pe){toast.show('Erro: '+pe.message,'error');setSaving(false);return}
